@@ -25,6 +25,8 @@ public class Menu extends JFrame {
 
     private JTextField registerNameField;
     private JTextField registerEmailField;
+    private JTextField loginUserField;
+    private JTextField loginPassField;
     private JPasswordField registerPassField;
     private JPasswordField registerConfPassField;
 
@@ -100,9 +102,9 @@ public class Menu extends JFrame {
         card.add(userLabel, cc);
 
         cc.gridy++;
-        JTextField userField = new JTextField(20);
-        styleTextField(userField);
-        card.add(userField, cc);
+        loginUserField = new JTextField(20);
+        styleTextField(loginUserField);
+        card.add(loginUserField, cc);
 
         cc.gridy++;
         JLabel passLabel = new JLabel("Contraseña");
@@ -110,14 +112,79 @@ public class Menu extends JFrame {
         card.add(passLabel, cc);
 
         cc.gridy++;
-        JPasswordField passField = new JPasswordField(20);
-        styleTextField(passField);
-        card.add(passField, cc);
+        loginPassField = new JPasswordField(20);
+        styleTextField(loginPassField);
+        card.add(loginPassField, cc);
 
         cc.gridy++;
         cc.gridwidth = 1;
         JButton loginBtn = createButton("Iniciar sesión");
         card.add(loginBtn, cc);
+
+        loginBtn.addActionListener(e -> {
+            String usuarioIngresado = loginUserField.getText();
+
+            
+            String contraIngresada = new String(loginPassField.getText());
+
+            if (usuarioIngresado == null || usuarioIngresado.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(Menu.this,
+                        "Por favor, ingresa tu nombre de usuario.",
+                        "Usuario Requerido",
+                        JOptionPane.WARNING_MESSAGE);
+                loginUserField.requestFocus();
+                return;
+            }
+
+            if (contraIngresada.isEmpty()) {
+                JOptionPane.showMessageDialog(Menu.this,
+                        "Por favor, ingresa tu contraseña.",
+                        "Contraseña Requerida",
+                        JOptionPane.WARNING_MESSAGE);
+                loginPassField.requestFocus();
+                return;
+            }
+
+            usuarioIngresado = usuarioIngresado.trim();
+            contraIngresada = contraIngresada.trim();
+
+            if (sistemaCuentas == null) {
+                sistemaCuentas = new Logica.Cuentas();
+                JOptionPane.showMessageDialog(Menu.this,
+                        "No hay usuarios registrados en el sistema.\n" + "Por favor, crea una cuenta primero.",
+                        "Sin Usuarios Registrados",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            if (sistemaCuentas.verificarCredenciales(usuarioIngresado, contraIngresada)) {
+
+                Logica.Usuarios usuarioLoggeado = sistemaCuentas.buscarUsuario(usuarioIngresado);
+
+                JOptionPane.showMessageDialog(Menu.this,
+                        "¡Bienvenido, " + usuarioIngresado + "!\n" + "Inicio de sesión exitoso.",
+                        "Bienvenido",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                loginUserField.setText("");
+                loginPassField.setText("");
+
+            } else {
+                JOptionPane.showMessageDialog(Menu.this,
+                        "Usuario o contraseña incorrectos.\n\n"
+                        + "Verifica que:\n"
+                        + "• El nombre de usuario sea exacto\n"
+                        + "• La contraseña tenga exactamente 5 caracteres\n"
+                        + "• Hayas creado una cuenta previamente",
+                        "Error de Inicio de Sesión",
+                        JOptionPane.ERROR_MESSAGE);
+
+                loginPassField.setText("");
+                loginPassField.requestFocus();
+            }
+            new Menu().setVisible(false);
+            new Menu_Principal().setVisible(true);
+        });
 
         cc.gridx = 1;
         JButton toRegister = createButton("Crear cuenta");
