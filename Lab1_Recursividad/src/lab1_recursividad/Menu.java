@@ -8,24 +8,50 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
  * @author Nathan
  */
+
+
+// Nota: Las clases 'Cuentas' y 'Usuarios' deben estar disponibles
+// en el mismo proyecto o importadas si están en un paquete diferente.
+
+/**
+ * Clase principal que define la ventana de Login/Registro.
+ */
 public class Menu extends JFrame {
 
+    // Campos de clase para la navegación y la lógica
     private CardLayout cards;
     private JPanel cardPanel;
+    private Logica.Cuentas sistemaCuentas; 
 
+    // Campos de texto para el panel de registro
+    private JTextField registerNameField;
+    private JTextField registerEmailField;
+    private JPasswordField registerPassField;
+    private JPasswordField registerConfPassField; 
+
+    /**
+     * Constructor de la ventana.
+     */
     public Menu() {
         super("Bienvenido — Email");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(480, 360);
+        setSize(480, 420); 
         setLocationRelativeTo(null);
         setResizable(false);
 
+        // Inicializar el sistema de cuentas
+        sistemaCuentas = new Logica.Cuentas(); 
+
+        // Panel principal con fondo degradado
         JPanel background = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -42,6 +68,7 @@ public class Menu extends JFrame {
         };
         background.setBorder(new EmptyBorder(18, 18, 18, 18));
 
+        // Paneles de tarjetas para cambiar entre Login y Registro
         cards = new CardLayout();
         cardPanel = new JPanel(cards);
         cardPanel.setOpaque(false);
@@ -51,6 +78,7 @@ public class Menu extends JFrame {
 
         background.add(cardPanel, BorderLayout.CENTER);
 
+        // Panel superior con título
         JPanel top = new JPanel(new BorderLayout());
         top.setOpaque(false);
         JLabel title = new JLabel("Iniciar sesión / Crear cuenta");
@@ -62,6 +90,7 @@ public class Menu extends JFrame {
 
         setContentPane(background);
     }
+// ----------------------------------------------------------------------------------
 
     private JPanel buildLoginPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
@@ -69,9 +98,7 @@ public class Menu extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(8, 8, 8, 8);
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 2;
+        c.gridx = 0; c.gridy = 0; c.gridwidth = 2;
 
         JPanel card = new JPanel();
         card.setOpaque(false);
@@ -81,8 +108,7 @@ public class Menu extends JFrame {
         GridBagConstraints cc = new GridBagConstraints();
         cc.insets = new Insets(6, 6, 6, 6);
         cc.fill = GridBagConstraints.HORIZONTAL;
-        cc.gridx = 0;
-        cc.gridy = 0;
+        cc.gridx = 0; cc.gridy = 0;
 
         JLabel userLabel = new JLabel("Usuario o correo");
         userLabel.setForeground(Color.WHITE);
@@ -119,6 +145,7 @@ public class Menu extends JFrame {
         panel.add(card, c);
         return panel;
     }
+// ----------------------------------------------------------------------------------
 
     private JPanel buildRegisterPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
@@ -135,137 +162,94 @@ public class Menu extends JFrame {
         GridBagConstraints cc = new GridBagConstraints();
         cc.insets = new Insets(6, 6, 6, 6);
         cc.fill = GridBagConstraints.HORIZONTAL;
-        cc.gridx = 0;
-        cc.gridy = 0;
+        cc.gridx = 0; cc.gridy = 0;
 
+        // Nombre
         JLabel nameLabel = new JLabel("Nombre completo");
         nameLabel.setForeground(Color.WHITE);
         card.add(nameLabel, cc);
-
         cc.gridy++;
-        JTextField nameField = new JTextField(20);
-        styleTextField(nameField);
-        card.add(nameField, cc);
+        registerNameField = new JTextField(20); 
+        styleTextField(registerNameField);
+        card.add(registerNameField, cc);
 
+        // Correo (Usuario)
         cc.gridy++;
         JLabel emailLabel = new JLabel("Correo electrónico");
         emailLabel.setForeground(Color.WHITE);
         card.add(emailLabel, cc);
-
         cc.gridy++;
-        JTextField emailField = new JTextField(20);
-        styleTextField(emailField);
-        card.add(emailField, cc);
+        registerEmailField = new JTextField(20); 
+        styleTextField(registerEmailField);
+        card.add(registerEmailField, cc);
 
+        // Contraseña
         cc.gridy++;
-        JLabel passLabel = new JLabel("Crear contraseña");
+        JLabel passLabel = new JLabel("Crear contraseña (5 caracteres)");
         passLabel.setForeground(Color.WHITE);
         card.add(passLabel, cc);
-
         cc.gridy++;
-        JPasswordField passField = new JPasswordField(20);
-        styleTextField(passField);
-        card.add(passField, cc);
+        registerPassField = new JPasswordField(20); 
+        styleTextField(registerPassField);
+        card.add(registerPassField, cc);
+        
+        // Confirmar Contraseña
+        cc.gridy++;
+        JLabel confLabel = new JLabel("Confirmar contraseña");
+        confLabel.setForeground(Color.WHITE);
+        card.add(confLabel, cc);
+        cc.gridy++;
+        registerConfPassField = new JPasswordField(20); 
+        styleTextField(registerConfPassField);
+        card.add(registerConfPassField, cc);
+
 
         cc.gridy++;
         JButton createBtn = createButton("Registrar");
         card.add(createBtn, cc);
+        
+        // Lógica de Registro (Ajustada para usar la clase 'Cuentas' con Arrays)
         createBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String usuario = registraru.getText();
-                String contra = registrarc.getText();
-                String confContra = textconf.getText();
+                String usuario = registerEmailField.getText(); 
+                String contra = new String(registerPassField.getPassword());
+                String confContra = new String(registerConfPassField.getPassword());
 
-                if (usuario == null || usuario.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this,
-                            "El campo Usuario no puede estar vacío.",
-                            "Campo Requerido",
-                            JOptionPane.WARNING_MESSAGE);
-                    registraru.requestFocus();
+                // Validaciones de UI (la clase Cuentas valida longitud y existencia)
+                if (usuario == null || usuario.trim().isEmpty() || contra == null || contra.trim().isEmpty() || confContra == null || confContra.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(Menu.this, "Todos los campos son obligatorios.", "Campo Requerido", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-
-                if (contra == null || contra.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this,
-                            "El campo Contraseña no puede estar vacío.",
-                            "Campo Requerido",
-                            JOptionPane.WARNING_MESSAGE);
-                    registrarc.requestFocus();
-                    return;
-                }
-
-                if (confContra == null || confContra.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this,
-                            "El campo Confirmar Contraseña no puede estar vacío.",
-                            "Campo Requerido",
-                            JOptionPane.WARNING_MESSAGE);
-                    textconf.requestFocus();
-                    return;
-                }
-
+                
                 usuario = usuario.trim();
                 contra = contra.trim();
                 confContra = confContra.trim();
 
                 if (!contra.equals(confContra)) {
-                    JOptionPane.showMessageDialog(this,
-                            "Las contraseñas no coinciden.\nPor favor, verifica e inténtalo de nuevo.",
-                            "Contraseñas Diferentes",
-                            JOptionPane.WARNING_MESSAGE);
-                    registrarc.setText("");
-                    textconf.setText("");
-                    registrarc.requestFocus();
+                    JOptionPane.showMessageDialog(Menu.this, "Las contraseñas no coinciden.", "Contraseñas Diferentes", JOptionPane.WARNING_MESSAGE);
+                    registerPassField.setText("");
+                    registerConfPassField.setText("");
+                    registerPassField.requestFocus();
                     return;
                 }
-
-                if (contra.length() != 5) {
-                    JOptionPane.showMessageDialog(this,
-                            "La contraseña debe tener exactamente 5 caracteres.\n"
-                            + "Longitud actual: " + contra.length() + " caracteres.",
-                            "Longitud Inválida",
-                            JOptionPane.WARNING_MESSAGE);
-                    registrarc.setText("");
-                    textconf.setText("");
-                    registrarc.requestFocus();
-                    return;
-                }
-
-                if (sistemaCuentas == null) {
-                    sistemaCuentas = new Cuentas();
-                }
-
+                
+                // Intentar registrar el usuario usando la clase Cuentas
                 boolean registroExitoso = sistemaCuentas.registrarUsuario(usuario, contra);
 
                 if (registroExitoso) {
-                    JOptionPane.showMessageDialog(this,
-                            "¡Usuario '" + usuario + "' registrado exitosamente!\n"
-                            + "Ya puedes iniciar sesión con tus credenciales.",
-                            "Registro Exitoso",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                    registraru.setText("");
-                    registrarc.setText("");
-                    textconf.setText("");
-
-                    new Proyecto2_1(sistemaCuentas).setVisible(true);
-                    this.dispose();
+                    // Limpiar campos y volver al login
+                    registerNameField.setText("");
+                    registerEmailField.setText("");
+                    registerPassField.setText("");
+                    registerConfPassField.setText("");
+                    cards.show(cardPanel, "login"); 
 
                 } else {
-                    JOptionPane.showMessageDialog(this,
-                            "No se pudo registrar el usuario '" + usuario + "'.\n"
-                            + "Posibles causas:\n"
-                            + "• El usuario ya existe\n"
-                            + "• Error interno del sistema\n\n"
-                            + "Por favor, intenta con un nombre de usuario diferente.",
-                            "Error de Registro",
-                            JOptionPane.ERROR_MESSAGE);
-
-                    registraru.setText("");
-                    registraru.requestFocus();
-                }
+                    // La clase Cuentas ya mostró un JOptionPane con el error (ej. usuario existe).
+                    registerEmailField.requestFocus();
+                }
             }
-            
         });
 
         cc.gridx = 1;
@@ -277,7 +261,9 @@ public class Menu extends JFrame {
         panel.add(card, c);
         return panel;
     }
+// ----------------------------------------------------------------------------------
 
+    // Método de estilo para campos de texto
     private void styleTextField(JTextComponent comp) {
         comp.setBackground(new Color(250, 250, 252, 220));
         comp.setBorder(BorderFactory.createCompoundBorder(
@@ -287,6 +273,7 @@ public class Menu extends JFrame {
         comp.setFont(new Font("SansSerif", Font.PLAIN, 13));
     }
 
+    // Método para crear y estilizar botones
     private JButton createButton(String text) {
         JButton btn = new JButton(text) {
             @Override
