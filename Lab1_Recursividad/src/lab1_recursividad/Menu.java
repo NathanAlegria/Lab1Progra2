@@ -263,9 +263,6 @@ public class Menu extends JFrame {
 
                     registraru.setText("");
                     registraru.requestFocus();
-                
-            
-        
                 }
             }
             
