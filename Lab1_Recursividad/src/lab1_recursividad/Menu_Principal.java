@@ -7,6 +7,8 @@ package lab1_recursividad;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -163,14 +165,29 @@ public class Menu_Principal extends JFrame {
         d.gridy = y++;
         btnLeerCorreo = createButton("📖  LEER CORREO"); panelDerecha.add(btnLeerCorreo, d); 
         d.gridy = y++;
+        btnLeerCorreo.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new EmailAccount().setVisible(true);
+            }
+        });
+        
         btnVerInbox = createButton("📬  VER INBOX"); panelDerecha.add(btnVerInbox, d); 
         d.gridy = y++;
+        btnVerInbox.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new EmailMain().setVisible(true);
+            }
+        });
+        
         btnLimpiarInbox = createButton("🧹  LIMPIAR INBOX"); panelDerecha.add(btnLimpiarInbox, d);
 
         splitCentral.setRightComponent(panelDerecha);
 
         fondo.add(splitCentral, BorderLayout.CENTER);
-
+        
+        
         
         areaContenido = new JTextArea(5, 80);
         areaContenido.setEditable(false);
