@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package lab1_recursividad;
+package Logica;
 
 import javax.swing.JOptionPane;
+import Logica.Usuarios;
 
 /**
  *
@@ -74,37 +75,35 @@ public class Cuentas {
     }
 
     public boolean verificarCredenciales(String username, String password) {
-        System.out.println("Verificando credenciales para usuario: '" + username + "'");
-        JOptionPane.showMessageDialog(null, "Error", "Información", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Verificando usuario: "+username, "Información", JOptionPane.INFORMATION_MESSAGE);
 
         if (username == null || password == null) {
-            System.out.println("ERROR: Credenciales nulas");
+            JOptionPane.showMessageDialog(null, "Error: Credenciales nulas", "Información", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
 
         for (int i = 0; i < numUsuarios; i++) {
-            if (usuarios[i] != null
-                    && usuarios[i].getUsuario().equals(username)
-                    && usuarios[i].getContra().equals(password)) {
-                System.out.println("ÉXITO: Credenciales válidas para '" + username + "'");
+            if (usuarios[i] != null&& usuarios[i].getUsuario().equals(username)&& usuarios[i].getContra().equals(password)) {
+                JOptionPane.showMessageDialog(null, "Exito: Credenciales de: "+username , "Información", JOptionPane.INFORMATION_MESSAGE);
                 return true;
             }
         }
 
-        System.out.println("ERROR: Credenciales inválidas para '" + username + "'");
+        JOptionPane.showMessageDialog(null, "Error Credenciales invalidas: Credenciales nulas", "Información", JOptionPane.INFORMATION_MESSAGE);
         return false;
     }
 
     public boolean cambiarcontra(String username, String currentPassword, String newPassword) {
         System.out.println("Cambiando contraseña para usuario: '" + username + "'");
+        JOptionPane.showMessageDialog(null, "Cambiando contraseña del usuario: "+username, "Información", JOptionPane.INFORMATION_MESSAGE);
 
         if (username == null || currentPassword == null || newPassword == null) {
-            System.out.println("ERROR: Parámetros nulos");
+            JOptionPane.showMessageDialog(null, "Error: Parametros nulos", "Información", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
 
         if (newPassword.trim().length() != 5) {
-            System.out.println("ERROR: Nueva contraseña debe tener 5 caracteres");
+           JOptionPane.showMessageDialog(null, "Error: Nueva contraseña debe tener exactamente 5 caracteres", "Información", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
 
@@ -112,47 +111,45 @@ public class Cuentas {
             if (usuarios[i] != null && usuarios[i].getUsuario().equals(username)) {
                 if (usuarios[i].getContra().equals(currentPassword)) {
                     usuarios[i].setContra(newPassword.trim());
-                    System.out.println("ÉXITO: Contraseña cambiada para '" + username + "'");
+                    JOptionPane.showMessageDialog(null, "Exito contraseña cambiada", "Información", JOptionPane.INFORMATION_MESSAGE);
                     return true;
                 } else {
-                    System.out.println("ERROR: Contraseña actual incorrecta");
+                    JOptionPane.showMessageDialog(null, "Error: contraseña actual incorrecta", "Información", JOptionPane.INFORMATION_MESSAGE);
                     return false;
                 }
             }
         }
 
-        System.out.println("ERROR: Usuario no encontrado");
+        JOptionPane.showMessageDialog(null, "Error: Usuario no encontrado", "Información", JOptionPane.INFORMATION_MESSAGE);
         return false;
     }
 
     public boolean eliminarUsuario(String username, String password) {
-        System.out.println("Eliminando usuario: '" + username + "'");
+        JOptionPane.showMessageDialog(null, "Eleminando usaurio: "+username, "Información", JOptionPane.INFORMATION_MESSAGE);
 
         if (username == null || password == null) {
-            System.out.println("ERROR: Parámetros nulos");
+            JOptionPane.showMessageDialog(null, "Error: Parametros nulos", "Información", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
 
         for (int i = 0; i < numUsuarios; i++) {
-            if (usuarios[i] != null
-                    && usuarios[i].getUsuario().equals(username)
-                    && usuarios[i].getContra().equals(password)) {
+            if (usuarios[i] != null && usuarios[i].getUsuario().equals(username)&& usuarios[i].getContra().equals(password)) {
 
                 for (int j = i; j < numUsuarios - 1; j++) {
                     usuarios[j] = usuarios[j + 1];
                 }
                 usuarios[numUsuarios - 1] = null;
                 numUsuarios--;
-                System.out.println("ÉXITO: Usuario '" + username + "' eliminado");
+                JOptionPane.showMessageDialog(null, "Exito usurio "+username+ " Eliminado.", "Información", JOptionPane.INFORMATION_MESSAGE);
                 return true;
             }
         }
 
-        System.out.println("ERROR: Usuario no encontrado o contraseña incorrecta");
+        JOptionPane.showMessageDialog(null, "Error: Usuario no encontrado o contraseña incorrecta", "Información", JOptionPane.INFORMATION_MESSAGE);
         return false;
     }
 
-    public Usuario buscarUsuario(String username) {
+    public Usuarios buscarUsuario(String username) {
         if (username == null) {
             return null;
         }
