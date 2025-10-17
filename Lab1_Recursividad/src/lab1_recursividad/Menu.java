@@ -1,3 +1,9 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package lab1_recursividad;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
@@ -15,22 +21,21 @@ public class Menu extends JFrame {
 
     private CardLayout cards;
     private JPanel cardPanel;
-    private Logica.Cuentas sistemaCuentas; 
+    private Logica.Cuentas sistemaCuentas;
 
     private JTextField registerNameField;
     private JTextField registerEmailField;
     private JPasswordField registerPassField;
-    private JPasswordField registerConfPassField; 
+    private JPasswordField registerConfPassField;
 
-    
     public Menu() {
         super("Bienvenido — Email");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(480, 420); 
+        setSize(480, 420);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        sistemaCuentas = new Logica.Cuentas(); 
+        sistemaCuentas = new Logica.Cuentas();
 
         JPanel background = new JPanel(new BorderLayout()) {
             @Override
@@ -68,14 +73,16 @@ public class Menu extends JFrame {
 
         setContentPane(background);
     }
-    
+
     private JPanel buildLoginPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(8, 8, 8, 8);
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0; c.gridy = 0; c.gridwidth = 2;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 2;
 
         JPanel card = new JPanel();
         card.setOpaque(false);
@@ -85,7 +92,8 @@ public class Menu extends JFrame {
         GridBagConstraints cc = new GridBagConstraints();
         cc.insets = new Insets(6, 6, 6, 6);
         cc.fill = GridBagConstraints.HORIZONTAL;
-        cc.gridx = 0; cc.gridy = 0;
+        cc.gridx = 0;
+        cc.gridy = 0;
 
         JLabel userLabel = new JLabel("Usuario o correo");
         userLabel.setForeground(Color.WHITE);
@@ -122,7 +130,7 @@ public class Menu extends JFrame {
         panel.add(card, c);
         return panel;
     }
-    
+
     private JPanel buildRegisterPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setOpaque(false);
@@ -138,13 +146,14 @@ public class Menu extends JFrame {
         GridBagConstraints cc = new GridBagConstraints();
         cc.insets = new Insets(6, 6, 6, 6);
         cc.fill = GridBagConstraints.HORIZONTAL;
-        cc.gridx = 0; cc.gridy = 0;
+        cc.gridx = 0;
+        cc.gridy = 0;
 
         JLabel nameLabel = new JLabel("Nombre completo");
         nameLabel.setForeground(Color.WHITE);
         card.add(nameLabel, cc);
         cc.gridy++;
-        registerNameField = new JTextField(20); 
+        registerNameField = new JTextField(20);
         styleTextField(registerNameField);
         card.add(registerNameField, cc);
 
@@ -153,7 +162,7 @@ public class Menu extends JFrame {
         emailLabel.setForeground(Color.WHITE);
         card.add(emailLabel, cc);
         cc.gridy++;
-        registerEmailField = new JTextField(20); 
+        registerEmailField = new JTextField(20);
         styleTextField(registerEmailField);
         card.add(registerEmailField, cc);
 
@@ -162,28 +171,27 @@ public class Menu extends JFrame {
         passLabel.setForeground(Color.WHITE);
         card.add(passLabel, cc);
         cc.gridy++;
-        registerPassField = new JPasswordField(20); 
+        registerPassField = new JPasswordField(20);
         styleTextField(registerPassField);
         card.add(registerPassField, cc);
-        
+
         cc.gridy++;
         JLabel confLabel = new JLabel("Confirmar contraseña");
         confLabel.setForeground(Color.WHITE);
         card.add(confLabel, cc);
         cc.gridy++;
-        registerConfPassField = new JPasswordField(20); 
+        registerConfPassField = new JPasswordField(20);
         styleTextField(registerConfPassField);
         card.add(registerConfPassField, cc);
-
 
         cc.gridy++;
         JButton createBtn = createButton("Registrar");
         card.add(createBtn, cc);
-        
+
         createBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String usuario = registerEmailField.getText(); 
+                String usuario = registerEmailField.getText();
                 String contra = new String(registerPassField.getPassword());
                 String confContra = new String(registerConfPassField.getPassword());
 
@@ -191,7 +199,7 @@ public class Menu extends JFrame {
                     JOptionPane.showMessageDialog(Menu.this, "Todos los campos son obligatorios.", "Campo Requerido", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                
+
                 usuario = usuario.trim();
                 contra = contra.trim();
                 confContra = confContra.trim();
@@ -203,7 +211,7 @@ public class Menu extends JFrame {
                     registerPassField.requestFocus();
                     return;
                 }
-                
+
                 boolean registroExitoso = sistemaCuentas.registrarUsuario(usuario, contra);
 
                 if (registroExitoso) {
@@ -211,7 +219,7 @@ public class Menu extends JFrame {
                     registerEmailField.setText("");
                     registerPassField.setText("");
                     registerConfPassField.setText("");
-                    cards.show(cardPanel, "login"); 
+                    cards.show(cardPanel, "login");
 
                 } else {
                     registerEmailField.requestFocus();
@@ -228,7 +236,7 @@ public class Menu extends JFrame {
         panel.add(card, c);
         return panel;
     }
-    
+
     private void styleTextField(JTextComponent comp) {
         comp.setBackground(new Color(250, 250, 252, 220));
         comp.setBorder(BorderFactory.createCompoundBorder(
