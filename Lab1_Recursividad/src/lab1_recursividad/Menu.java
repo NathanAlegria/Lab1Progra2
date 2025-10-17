@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package lab1_recursividad;
 
 import javax.swing.*;
@@ -18,6 +14,7 @@ public class Menu extends JFrame {
 
     private CardLayout cards;
     private JPanel cardPanel;
+    private JTextField loginUserField; 
 
     public Menu() {
         super("Bienvenido — Email");
@@ -27,20 +24,20 @@ public class Menu extends JFrame {
         setResizable(false);
 
         JPanel background = new JPanel(new BorderLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-                int w = getWidth();
-                int h = getHeight();
-                Color color1 = new Color(8, 56, 99);
-                Color color2 = new Color(2, 18, 25);
-                GradientPaint gp = new GradientPaint(0, 0, color1, 0, h, color2);
-                g2.setPaint(gp);
-                g2.fillRect(0, 0, w, h);
-            }
-        };
-        background.setBorder(new EmptyBorder(18, 18, 18, 18));
+             @Override
+             protected void paintComponent(Graphics g) {
+                 super.paintComponent(g);
+                 Graphics2D g2 = (Graphics2D) g;
+                 int w = getWidth();
+                 int h = getHeight();
+                 Color color1 = new Color(8, 56, 99);
+                 Color color2 = new Color(2, 18, 25);
+                 GradientPaint gp = new GradientPaint(0, 0, color1, 0, h, color2);
+                 g2.setPaint(gp);
+                 g2.fillRect(0, 0, w, h);
+             }
+         };
+         background.setBorder(new EmptyBorder(18, 18, 18, 18));
 
         cards = new CardLayout();
         cardPanel = new JPanel(cards);
@@ -48,9 +45,7 @@ public class Menu extends JFrame {
 
         cardPanel.add(buildLoginPanel(), "login");
         cardPanel.add(buildRegisterPanel(), "register");
-
-        background.add(cardPanel, BorderLayout.CENTER);
-
+        
         JPanel top = new JPanel(new BorderLayout());
         top.setOpaque(false);
         JLabel title = new JLabel("Iniciar sesión / Crear cuenta");
@@ -59,7 +54,8 @@ public class Menu extends JFrame {
         top.add(title, BorderLayout.WEST);
 
         background.add(top, BorderLayout.NORTH);
-
+        background.add(cardPanel, BorderLayout.CENTER);
+        
         setContentPane(background);
     }
 
@@ -89,9 +85,9 @@ public class Menu extends JFrame {
         card.add(userLabel, cc);
 
         cc.gridy++;
-        JTextField userField = new JTextField(20);
-        styleTextField(userField);
-        card.add(userField, cc);
+        loginUserField = new JTextField(20); 
+        styleTextField(loginUserField);
+        card.add(loginUserField, cc);
 
         cc.gridy++;
         JLabel passLabel = new JLabel("Contraseña");
@@ -158,7 +154,7 @@ public class Menu extends JFrame {
         card.add(emailField, cc);
 
         cc.gridy++;
-        JLabel passLabel = new JLabel("Crear contraseña");
+        JLabel passLabel = new JLabel("Crear contraseña (5 caracteres)"); // Aclaro la restricción
         passLabel.setForeground(Color.WHITE);
         card.add(passLabel, cc);
 
@@ -166,41 +162,53 @@ public class Menu extends JFrame {
         JPasswordField passField = new JPasswordField(20);
         styleTextField(passField);
         card.add(passField, cc);
+        
+        cc.gridy++;
+        JLabel confPassLabel = new JLabel("Confirmar contraseña");
+        confPassLabel.setForeground(Color.WHITE);
+        card.add(confPassLabel, cc);
+        
+        cc.gridy++;
+        JPasswordField confPassField = new JPasswordField(20);
+        styleTextField(confPassField);
+        card.add(confPassField, cc);
 
         cc.gridy++;
         JButton createBtn = createButton("Registrar");
         card.add(createBtn, cc);
+        
         createBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String usuario = registraru.getText();
-                String contra = registrarc.getText();
-                String confContra = textconf.getText();
+                String nombre = nameField.getText();
+                String usuario = emailField.getText();
+                String contra = new String(passField.getPassword());
+                String confContra = new String(confPassField.getPassword());
 
-                if (usuario == null || usuario.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this,
-                            "El campo Usuario no puede estar vacío.",
+                if (usuario.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(card,
+                            "El campo Correo no puede estar vacío.",
                             "Campo Requerido",
                             JOptionPane.WARNING_MESSAGE);
-                    registraru.requestFocus();
+                    emailField.requestFocus();
                     return;
                 }
 
-                if (contra == null || contra.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this,
+                if (contra.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(card,
                             "El campo Contraseña no puede estar vacío.",
                             "Campo Requerido",
                             JOptionPane.WARNING_MESSAGE);
-                    registrarc.requestFocus();
+                    passField.requestFocus();
                     return;
                 }
 
-                if (confContra == null || confContra.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this,
+                if (confContra.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(card,
                             "El campo Confirmar Contraseña no puede estar vacío.",
                             "Campo Requerido",
                             JOptionPane.WARNING_MESSAGE);
-                    textconf.requestFocus();
+                    confPassField.requestFocus();
                     return;
                 }
 
@@ -209,63 +217,36 @@ public class Menu extends JFrame {
                 confContra = confContra.trim();
 
                 if (!contra.equals(confContra)) {
-                    JOptionPane.showMessageDialog(this,
+                    JOptionPane.showMessageDialog(card,
                             "Las contraseñas no coinciden.\nPor favor, verifica e inténtalo de nuevo.",
                             "Contraseñas Diferentes",
                             JOptionPane.WARNING_MESSAGE);
-                    registrarc.setText("");
-                    textconf.setText("");
-                    registrarc.requestFocus();
+                    passField.setText("");
+                    confPassField.setText("");
+                    passField.requestFocus();
                     return;
                 }
 
                 if (contra.length() != 5) {
-                    JOptionPane.showMessageDialog(this,
+                    JOptionPane.showMessageDialog(card,
                             "La contraseña debe tener exactamente 5 caracteres.\n"
                             + "Longitud actual: " + contra.length() + " caracteres.",
                             "Longitud Inválida",
                             JOptionPane.WARNING_MESSAGE);
-                    registrarc.setText("");
-                    textconf.setText("");
-                    registrarc.requestFocus();
+                    passField.setText("");
+                    confPassField.setText("");
+                    passField.requestFocus();
                     return;
                 }
-
-                if (sistemaCuentas == null) {
-                    sistemaCuentas = new Cuentas();
-                }
-
-                boolean registroExitoso = sistemaCuentas.registrarUsuario(usuario, contra);
-
-                if (registroExitoso) {
-                    JOptionPane.showMessageDialog(this,
-                            "¡Usuario '" + usuario + "' registrado exitosamente!\n"
-                            + "Ya puedes iniciar sesión con tus credenciales.",
-                            "Registro Exitoso",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                    registraru.setText("");
-                    registrarc.setText("");
-                    textconf.setText("");
-
-                    new Proyecto2_1(sistemaCuentas).setVisible(true);
-                    this.dispose();
-
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            "No se pudo registrar el usuario '" + usuario + "'.\n"
-                            + "Posibles causas:\n"
-                            + "• El usuario ya existe\n"
-                            + "• Error interno del sistema\n\n"
-                            + "Por favor, intenta con un nombre de usuario diferente.",
-                            "Error de Registro",
-                            JOptionPane.ERROR_MESSAGE);
-
-                    registraru.setText("");
-                    registraru.requestFocus();
-                }
+                
+                
+                
+                 JOptionPane.showMessageDialog(card,
+                             "Validación exitosa para: " + usuario,
+                             "Simulación de Registro",
+                             JOptionPane.INFORMATION_MESSAGE);
+                 cards.show(cardPanel, "login");
             }
-            
         });
 
         cc.gridx = 1;
@@ -277,7 +258,7 @@ public class Menu extends JFrame {
         panel.add(card, c);
         return panel;
     }
-
+    
     private void styleTextField(JTextComponent comp) {
         comp.setBackground(new Color(250, 250, 252, 220));
         comp.setBorder(BorderFactory.createCompoundBorder(
