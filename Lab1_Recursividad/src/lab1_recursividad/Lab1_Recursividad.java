@@ -14,7 +14,7 @@ public class Lab1_Recursividad {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new MenuPrincipal().setVisible(true);
+        new Menu().setVisible(true);
     }
     
 }

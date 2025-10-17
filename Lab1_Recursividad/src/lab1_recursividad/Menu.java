@@ -12,11 +12,11 @@ package lab1_recursividad;
  *
  * @author Nathan
  */
-public class MenuPrincipal extends JFrame{
+public class Menu extends JFrame{
     private CardLayout cards;
     private JPanel cardPanel;
 
-    public MenuPrincipal() {
+    public Menu() {
         super("Bienvenido — Email");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(480, 360);
