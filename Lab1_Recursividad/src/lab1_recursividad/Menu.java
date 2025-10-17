@@ -3,16 +3,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package lab1_recursividad;
- import javax.swing.*;
- import javax.swing.border.EmptyBorder;
- import javax.swing.text.JTextComponent;
- import java.awt.*;
- import java.awt.event.*;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.awt.event.*;
+
 /**
  *
  * @author Nathan
  */
-public class Menu extends JFrame{
+public class Menu extends JFrame {
+
     private CardLayout cards;
     private JPanel cardPanel;
 
@@ -21,7 +24,7 @@ public class Menu extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(480, 360);
         setLocationRelativeTo(null);
-        setResizable(false); 
+        setResizable(false);
 
         JPanel background = new JPanel(new BorderLayout()) {
             @Override
@@ -167,6 +170,106 @@ public class Menu extends JFrame{
         cc.gridy++;
         JButton createBtn = createButton("Registrar");
         card.add(createBtn, cc);
+        createBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String usuario = registraru.getText();
+                String contra = registrarc.getText();
+                String confContra = textconf.getText();
+
+                if (usuario == null || usuario.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "El campo Usuario no puede estar vacío.",
+                            "Campo Requerido",
+                            JOptionPane.WARNING_MESSAGE);
+                    registraru.requestFocus();
+                    return;
+                }
+
+                if (contra == null || contra.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "El campo Contraseña no puede estar vacío.",
+                            "Campo Requerido",
+                            JOptionPane.WARNING_MESSAGE);
+                    registrarc.requestFocus();
+                    return;
+                }
+
+                if (confContra == null || confContra.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "El campo Confirmar Contraseña no puede estar vacío.",
+                            "Campo Requerido",
+                            JOptionPane.WARNING_MESSAGE);
+                    textconf.requestFocus();
+                    return;
+                }
+
+                usuario = usuario.trim();
+                contra = contra.trim();
+                confContra = confContra.trim();
+
+                if (!contra.equals(confContra)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Las contraseñas no coinciden.\nPor favor, verifica e inténtalo de nuevo.",
+                            "Contraseñas Diferentes",
+                            JOptionPane.WARNING_MESSAGE);
+                    registrarc.setText("");
+                    textconf.setText("");
+                    registrarc.requestFocus();
+                    return;
+                }
+
+                if (contra.length() != 5) {
+                    JOptionPane.showMessageDialog(this,
+                            "La contraseña debe tener exactamente 5 caracteres.\n"
+                            + "Longitud actual: " + contra.length() + " caracteres.",
+                            "Longitud Inválida",
+                            JOptionPane.WARNING_MESSAGE);
+                    registrarc.setText("");
+                    textconf.setText("");
+                    registrarc.requestFocus();
+                    return;
+                }
+
+                if (sistemaCuentas == null) {
+                    sistemaCuentas = new Cuentas();
+                }
+
+                boolean registroExitoso = sistemaCuentas.registrarUsuario(usuario, contra);
+
+                if (registroExitoso) {
+                    JOptionPane.showMessageDialog(this,
+                            "¡Usuario '" + usuario + "' registrado exitosamente!\n"
+                            + "Ya puedes iniciar sesión con tus credenciales.",
+                            "Registro Exitoso",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    registraru.setText("");
+                    registrarc.setText("");
+                    textconf.setText("");
+
+                    new Proyecto2_1(sistemaCuentas).setVisible(true);
+                    this.dispose();
+
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "No se pudo registrar el usuario '" + usuario + "'.\n"
+                            + "Posibles causas:\n"
+                            + "• El usuario ya existe\n"
+                            + "• Error interno del sistema\n\n"
+                            + "Por favor, intenta con un nombre de usuario diferente.",
+                            "Error de Registro",
+                            JOptionPane.ERROR_MESSAGE);
+
+                    registraru.setText("");
+                    registraru.requestFocus();
+                
+            
+        
+                }
+            }
+            
+        });
 
         cc.gridx = 1;
         JButton backBtn = createButton("Volver");
